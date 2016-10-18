@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+</head>
+
+<body>
+    <script type="text/javascript">
+        (function(window, document, undefined) {
+            var g = window.document,
+                k = {
+                    getItem: function(b) {
+                        return b ? decodeURIComponent(document.cookie.replace(RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(b).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null : null
+                    },
+                    setItem: function(b, c, a, d, e, h) {
+                        if (!b || /^(?:expires|max\-age|path|domain|secure)$/i.test(b)) return !1;
+                        var f = "";
+                        if (a) switch (a.constructor) {
+                            case Number:
+                                f = Infinity === a ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + a;
+                                break;
+                            case String:
+                                f = "; expires=" + a;
+                                break;
+                            case Date:
+                                f = "; expires=" +
+                                    a.toUTCString()
+                        }
+                        document.cookie = encodeURIComponent(b) + "=" + encodeURIComponent(c) + f + (e ? "; domain=" + e : "") + (d ? "; path=" + d : "") + (h ? "; secure" : "");
+                        return !0
+                    },
+                    removeItem: function(b, c, a) {
+                        if (!this.e(b)) return !1;
+                        document.cookie = encodeURIComponent(b) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (a ? "; domain=" + a : "") + (c ? "; path=" + c : "");
+                        return !0
+                    },
+                    e: function(b) {
+                        return b ? RegExp("(?:^|;\\s*)" + encodeURIComponent(b).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=").test(document.cookie) : !1
+                    },
+                    keys: function() {
+                        for (var b = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g,
+                                "").split(/\s*(?:\=[^;]*)?;\s*/), c = b.length, a = 0; a < c; a++) b[a] = decodeURIComponent(b[a]);
+                        return b
+                    }
+                },
+                l = 0,
+                m = {
+                    0: {
+                        name: "NONE",
+                        d: null
+                    },
+                    1: {
+                        name: "ERROR",
+                        d: console.error
+                    },
+                    2: {
+                        name: "WARN",
+                        d: console.warn
+                    },
+                    3: {
+                        name: "INFO",
+                        d: console.info
+                    },
+                    4: {
+                        name: "DEBUG",
+                        d: console.debug
+                    }
+                };
+
+            function n(b) {
+                if (b && 1 <= l) {
+                    var c = m[1];
+                    arguments && console && c.d && c.d("YM " + c.name + ": ", arguments)
+                }
+            }
+            var p = k.getItem("yieldmo_logger"),
+                q;
+            if (q = p) q = !0 === (m[p] ? !0 : !1);
+            q && (l = parseInt(p, 10));
+
+            function r(b, c) {
+                if (null !== b && "undefined" !== typeof b && null !== c && "undefined" !== typeof c) {
+                    var a = Array.prototype.forEach,
+                        d = {};
+                    if (a && b.forEach === a) b.forEach(c, void 0);
+                    else if (b.length === +b.length)
+                        for (var a = 0, e = b.length; a < e && c.call(void 0, b[a], a, b) !== d; a++);
+                }
+            }
+            var s = Date.now || function() {
+                    return (new Date).getTime()
+                },
+                t = ["https://idsync.rlcdn.com/397286.gif?partner_uid={{y}}"],
+                u = {
+                    c: "https://cm.g.doubleclick.net/pixel?google_nid=yieldmo_dbm&google_cm&pn_id=c",
+                    a: "https://dpm.demdex.net/ibs:dpid=81304&dpuuid={{y}}",
+                    z: "https://b1sync.zemanta.com/usersync/yieldmo/?id={{y}}",
+                    b: "https://stags.bluekai.com/site/26980?limit=0&id={{y}}",
+                    t: "https://match.adsrvr.org/track/cmf/generic?ttd_pid=yieldmo&ttd_tpi=1&ttd_puid={{y}}"
+                };
+
+            function v(b) {
+                return b.replace(/{{y}}/g, window.location.hash.substr(1, window.location.hash.length - 1))
+            }
+
+            function w() {
+                var b = g.getElementsByTagName("body")[0];
+                r(t, function(c) {
+                    c = v(c);
+                    var a = g.createElement("img");
+                    a.src = c;
+                    a.className = "std";
+                    b && b.appendChild(a)
+                })
+            }
+
+            function x() {
+                var b = y,
+                    c = k.getItem("s"),
+                    a = [],
+                    d = !0;
+                if (!c) return !0;
+                a = c.split("|");
+                r(a, function(a) {
+                    a = a.split("=");
+                    a[0] === b && 12096E5 > s() - 36E5 * a[1] && (d = !1)
+                });
+                return d
+            }
+
+            function z() {
+                var b = y,
+                    c = k.getItem("s"),
+                    a = [],
+                    d = [],
+                    e = [],
+                    h = s(),
+                    f = new Date(h + 12096E5);
+                c && (a = c.split("|"));
+                r(a, function(a) {
+                    d = a.split("=");
+                    d[0] !== b && e.push(a)
+                });
+                e.push(b + "=" + Math.round(h / 36E5));
+                k.setItem("s", e.join("|"), f.toUTCString(), null, "s.yieldmo.com", !1)
+            }
+            try {
+                w();
+                var A;
+                A || (A = navigator.userAgent);
+                var B = A.match(/iPhone|iPad|iPod/i),
+                    C;
+                if (!(C = !0 !== (null !== B && void 0 !== B))) {
+                    var D;
+                    D || (D = navigator.userAgent);
+                    var E = D.match(/CriOS\//g);
+                    C = !1 !== (null !== E && void 0 !== E)
+                }
+                if (C) {
+                    var F = g.getElementsByTagName("body")[0],
+                        y;
+                    for (y in u)
+                        if (x()) {
+                            var G = g.createElement("img");
+                            G.src = v(u[y]);
+                            G.className = "rs";
+                            F && F.appendChild(G);
+                            z()
+                        }
+                }
+            } catch (H) {
+                n("failed to load the partner.min.html iframe", H)
+            };
+        })(window, document, void 0)
+    </script>
+</body>
+
+</html>
